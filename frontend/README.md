@@ -1,128 +1,59 @@
 Task Manager API - README
-Overview
 
-This is a Task Manager backend API built with Node.js, Express, and MongoDB. It supports user registration, login, and role-based task management with roles like admin and regular users.
+## How to Run the App
+### Backend (Express + MongoDB)
+1. Go to the backend directory:
+   cd backend
 
-User Authentication
-Registration (POST /register)
+2. Install dependencies:
+   npm install
 
-Required fields: fullname, email, phoneNumber, password
+3. Start the server:
+   npm run dev
 
-Checks if the email is already registered.
+### Frontend (React)
+  
+1. Go to the frontend directory:
+   cd frontend
 
-Password is hashed with bcrypt before saving.
+2. Install dependencies:
+   npm install
 
-Returns success message if created.
+3. Start the React app:
+   npm start
 
-Login (POST /login)
+4. App will run at:
+   http://localhost:3000
 
-Required fields: email, password
+## API Details
+### Auth Routes
+ Method  Endpoint       Description         
+1. POST   /api/register  Register a new user 
+2. POST   /api/login     Login and get token 
 
-Checks if user exists and password matches.
+### Task Routes
+  Method  Endpoint               Access      Description               
 
-On success:
+1. GET     /api/task              Admin/User  Get all tasks (filtered) 
+2. GET     /api/task/\:id         Admin/User  Get task by ID            
+3. POST    /api/task/create       User/Admin  Create a new task         
+4. PUT     /api/task/update/\:id  User/Admin  Update a task             
+5. DELETE  /api/task/delete/\:id  Admin Only  Delete a task             
+6. GET     /api/task/counts       Admin/User  Get dashboard task counts 
 
-Generates a JWT token valid for 1 day.
+## Technologies Used
+### Backend:
 
-Returns user details and token.
+1. Node.js
+2. Express.js
+3. MongoDB + Mongoose
+4. JSON Web Tokens (JWT)
+5. bcrypt.js
 
-Sends token as an HTTP-only cookie.
+### Frontend:
 
-On failure: returns an error message.
-
-User Roles & Permissions
-
-Users have a role field: either "admin" or default user.
-
-JWT token contains userId and role for authorization.
-
-Task Management
-Models
-
-Each task has: title, description, status, priority, dueDate, assignedTo, createdBy, and optional tags.
-
-Status values: "pending", "in-progress", "completed".
-
-Get Task Counts (GET /tasks/counts)
-
-Admin: counts for all tasks across statuses.
-
-User: counts only for tasks created by them.
-
-Create Task (POST /tasks)
-
-Creates a new task.
-
-Requires auth user ID as createdBy.
-
-Validates assignedTo user ID format if provided.
-
-Get All Tasks (GET /tasks)
-
-Admin: retrieves all tasks matching optional keyword (searches title & description).
-
-User: retrieves tasks created by themselves matching keyword.
-
-Get Task By ID (GET /tasks/:id)
-
-Returns task details.
-
-Admin: access any task.
-
-User: access only their own tasks.
-
-Returns 403 Access denied if unauthorized.
-
-Update Task (PUT /tasks/:id)
-
-Admin: can update all fields (title, description, status, priority, dueDate, assignedTo, tags).
-
-User: can only update status field to one of the allowed values.
-
-Unauthorized users get a 403 Access denied.
-
-Invalid status updates return a 400 Bad Request.
-
-Delete Task (DELETE /tasks/:id)
-
-Only admin users can delete tasks.
-
-Others receive 403 Only admin can delete tasks.
-
-How to Use
-
-Register a new user or use an existing user.
-
-Login with valid credentials to get an auth token.
-
-Use the token in the Authorization header (Bearer <token>) for subsequent API calls.
-
-Create, read, update, and delete tasks based on your user role.
-
-Non-admin users have limited access to tasks they created and can only update task status.
-
-Admins have full control over all tasks.
-
-Example Workflow
-
-User signs up and logs in.
-
-User creates tasks assigned to themselves or others.
-
-User can view and update their tasks' status.
-
-Admin can manage (view/update/delete) all tasks.
-
-Admin can assign tasks to any user and update all details.
-
-Security Notes
-
-Passwords are hashed with bcrypt.
-
-JWT tokens are used for authentication and stored as HTTP-only cookies.
-
-Role-based access control enforced in all task-related endpoints.
-
-Feel free to ask if you want me to generate example API routes or usage with curl/Postman!
-
-Would you like me to help you with a Postman collection or client example next?
+1. React.js
+2. Axios
+3. React Query
+4. Tailwind CSS
+5. React Router
