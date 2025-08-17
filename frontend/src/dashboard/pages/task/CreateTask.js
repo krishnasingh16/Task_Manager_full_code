@@ -1,37 +1,63 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { endpoint } from '../../../utils/APIRoutes';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { endpoint } from "../../../utils/APIRoutes";
+import { useNavigate } from "react-router-dom";
 
 const TaskCreate = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("logindataen");
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get(endpoint.get_all_user, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(res.data.users);
+      } catch (err) {
+        console.error("Failed to fetch users:", err);
+      }
+    };
+
+    fetchUsers();
+  }, [token]);
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    status: 'pending',
-    priority: 'low',
-    dueDate: '', 
-    assignedTo: '',
+    title: "",
+    description: "",
+    status: "pending",
+    priority: "low",
+    dueDate: "",
+    assignedTo: "",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { title, description, status, priority, dueDate, assignedTo } = formData;
+    const { title, description, status, priority, dueDate, assignedTo } =
+      formData;
 
-    if (!title || !description || !status || !priority || !dueDate || !assignedTo) {
+    if (
+      !title ||
+      !description ||
+      !status ||
+      !priority ||
+      !dueDate ||
+      !assignedTo
+    ) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -47,7 +73,7 @@ const TaskCreate = () => {
       await axios.post(endpoint.create_task, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -70,97 +96,117 @@ const TaskCreate = () => {
         </div>
       )}
 
-<form onSubmit={handleSubmit} className="space-y-4 bg-gray-800 p-6 rounded-lg border border-gray-700 shadow">
-  <div className="flex gap-6">
-    <div className="flex-1">
-      <label className="block mb-1 font-medium">Title <span className="text-red-500">*</span></label>
-      <input
-        type="text"
-        name="title"
-        required
-        className="w-full p-2 rounded bg-gray-700 text-white"
-        value={formData.title}
-        onChange={handleChange}
-      />
-    </div>
-
-    <div className="flex-1">
-      <label className="block mb-1 font-medium">Description <span className="text-red-500">*</span></label>
-      <input
-        type="text"
-        name="description"
-        required
-        className="w-full p-2 rounded bg-gray-700 text-white"
-        value={formData.description}
-        onChange={handleChange}
-      />
-    </div>
-  </div>
-
-  <div className="grid grid-cols-2 gap-6">
-    <div>
-      <label className="block mb-1 font-medium">Status <span className="text-red-500">*</span></label>
-      <select
-        name="status"
-        className="w-full p-2 rounded bg-gray-700 text-white"
-        value={formData.status}
-        onChange={handleChange}
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-gray-800 p-6 rounded-lg border border-gray-700 shadow"
       >
-        <option value="pending">Pending</option>
-        <option value="in progress">In Progress</option>
-        <option value="completed">Completed</option>
-      </select>
-    </div>
+        <div className="flex gap-6">
+          <div className="flex-1">
+            <label className="block mb-1 font-medium">
+              Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="title"
+              required
+              className="w-full p-2 rounded bg-gray-700 text-white"
+              value={formData.title}
+              onChange={handleChange}
+            />
+          </div>
 
-    <div>
-      <label className="block mb-1 font-medium">Priority <span className="text-red-500">*</span></label>
-      <select
-        name="priority"
-        className="w-full p-2 rounded bg-gray-700 text-white"
-        value={formData.priority}
-        onChange={handleChange}
-      >
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
-    </div>
+          <div className="flex-1">
+            <label className="block mb-1 font-medium">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="description"
+              required
+              className="w-full p-2 rounded bg-gray-700 text-white"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
 
-    <div>
-      <label className="block mb-1 font-medium">Due Date <span className="text-red-500">*</span></label>
-      <input
-        type="date"
-        name="dueDate"
-        required
-        className="w-full p-2 rounded bg-gray-700 text-white"
-        value={formData.dueDate}
-        onChange={handleChange}
-      />
-    </div>
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className="block mb-1 font-medium">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="status"
+              className="w-full p-2 rounded bg-gray-700 text-white"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              <option value="pending">Pending</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
 
-    <div>
-      <label className="block mb-1 font-medium">Assigned To (User ID) <span className="text-red-500">*</span></label>
-      <input
-        type="text"
-        name="assignedTo"
-        required
-        className="w-full p-2 rounded bg-gray-700 text-white"
-        value={formData.assignedTo}
-        onChange={handleChange}
-      />
-    </div>
-  </div>
+          <div>
+            <label className="block mb-1 font-medium">
+              Priority <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="priority"
+              className="w-full p-2 rounded bg-gray-700 text-white"
+              value={formData.priority}
+              onChange={handleChange}
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
 
-  <div className="md:col-span-2 flex w justify-end">
-    <button
-      type="submit"
-      className=" bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white font-semibold transition"
-    >
-      Create Task
-    </button>
-  </div>
-</form>
+          <div>
+            <label className="block mb-1 font-medium">
+              Due Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="dueDate"
+              required
+              className="w-full p-2 rounded bg-gray-700 text-white"
+              value={formData.dueDate}
+              onChange={handleChange}
+            />
+          </div>
 
+          <div>
+            <label className="block mb-1 font-medium">
+              Assigned To (User ID) <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="assignedTo"
+              required
+              className="w-full p-2 rounded bg-gray-700 text-white"
+              value={formData.assignedTo}
+              onChange={handleChange}
+            >
+              <option value="">Select a user</option>
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.email}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="md:col-span-2 flex w justify-end">
+          <button
+            type="submit"
+            className=" bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white font-semibold transition"
+          >
+            Create Task
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

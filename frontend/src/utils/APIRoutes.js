@@ -11,4 +11,5 @@ export const endpoint = {
   delete_task: `${domain}/api/v1/task/delete`,
   task_by_id: `${domain}/api/v1/task/task`,
   task_counts:`${domain}/api/v1/task/counts`,
+  get_all_user:`${domain}/api/v1/task/user`,
 };
