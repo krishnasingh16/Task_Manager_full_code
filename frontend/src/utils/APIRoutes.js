@@ -1,4 +1,5 @@
-export const domain = "http://localhost:8000";
+// export const domain = "http://localhost:8000";
+export const domain = "https://task-manager-full-code.vercel.app";
 
 
 export const endpoint = {
