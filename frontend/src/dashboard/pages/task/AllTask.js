@@ -68,6 +68,7 @@ const TaskList = () => {
             <thead className="bg-gray-700">
               <tr>
                 <th className="px-4 py-2 text-left">S.No.</th>
+                <th className="px-4 py-2 text-left">User Id</th>
                 <th className="px-4 py-2 text-left">Title</th>
                 <th className="px-4 py-2 text-left">Description</th>
                 <th className="px-4 py-2 text-left">Status</th>
@@ -81,6 +82,7 @@ const TaskList = () => {
                 .map((task, index) => (
                   <tr key={task._id} className="hover:bg-gray-700">
                     <td className="px-4 py-2">{(page - 1) * itemsPerPage + index + 1}</td>
+                    <td className="px-4 py-2">{task._id}</td>
                     <td className="px-4 py-2">{task.title}</td>
                     <td className="px-4 py-2">{task.description}</td>
                     <td className="px-4 py-2">{task.status}</td>
